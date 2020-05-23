@@ -27,7 +27,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy:prod": "REACT_APP_PROJECT_ID=ec-app-12ba0 && npm run build && firebase use ec-app-12ba0 && firebase deploy",
+    "deploy:dev": "REACT_APP_PROJECT_ID=ec-app-dev-12c21 && npm run build && firebase use ec-app-dev-12c21 && firebase deploy"
   },
   "eslintConfig": {
     "extends": "react-app"
