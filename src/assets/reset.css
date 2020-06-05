@@ -1,0 +1,361 @@
+/*! normalize.css v3.0.1 | MIT License | git.io/normalize */
+
+html {
+    font-size: 16px;
+    font-family:  '游ゴシック', YuGothic, 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3','ヒラギノ角ゴ Pro W3', 'メイリオ', Meiryo, sans-serif;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-feature-settings: "palt";
+    margin: 0;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary {
+    display: block
+}
+
+audio, canvas, progress, video {
+    display: inline-block;
+    vertical-align: baseline
+}
+
+b, strong {
+    font-weight: 700
+}
+
+dfn {
+    font-style: italic
+}
+
+h1 {
+    font-size: 2em;
+    margin: .67em 0
+}
+
+mark {
+    background: #ff0;
+    color: #000
+}
+
+small {
+    font-size: 80%
+}
+
+sub, sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline
+}
+
+sup {
+    top: -.5em
+}
+
+sub {
+    bottom: -.25em
+}
+
+img {
+    border: 0
+}
+
+svg:not(:root) {
+    overflow: hidden
+}
+
+figure {
+    margin: 1em 40px
+}
+
+hr {
+    box-sizing: content-box;
+    height: 0
+}
+
+pre {
+    overflow: auto
+}
+
+code, kbd, pre, samp {
+    font-family: monospace, monospace;
+    font-size: 1em
+}
+
+button, input, optgroup, select, textarea {
+    color: inherit;
+    font: inherit;
+    margin: 0
+}
+
+button {
+    overflow: visible
+}
+
+button, select {
+    text-transform: none
+}
+
+button, html input[type=button], input[type=reset], input[type=submit] {
+    -webkit-appearance: button;
+    cursor: pointer
+}
+
+button[disabled], html input[disabled] {
+    cursor: default
+}
+
+button::-moz-focus-inner, input::-moz-focus-inner {
+    border: 0;
+    padding: 0
+}
+
+input {
+    line-height: normal
+}
+
+input[type=checkbox], input[type=radio] {
+    box-sizing: border-box;
+    padding: 0
+}
+
+input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {
+    height: auto
+}
+
+input[type=search] {
+    -webkit-appearance: textfield;
+    box-sizing: content-box
+}
+
+input[type=search]::-webkit-search-cancel-button, input[type=search]::-webkit-search-decoration {
+    -webkit-appearance: none
+}
+
+fieldset {
+    border: 1px solid silver;
+    margin: 0 2px;
+    padding: .35em .625em .75em
+}
+
+legend {
+    border: 0;
+    padding: 0
+}
+
+textarea {
+    overflow: auto
+}
+
+optgroup {
+    font-weight: 700
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0
+}
+
+td, th {
+    padding: 0
+}
+
+*, :after, :before {
+    box-sizing: border-box
+}
+
+blockquote, dd, div, dl, dt, form, h1, h2, h3, h4, h5, h6, li, ol, p, pre, td, th, ul {
+    margin: 0;
+    padding: 0
+}
+
+abbr, acronym, blockquote, code, input, kbd, q, samp, var {
+    -webkit-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none
+}
+
+body {
+    background: #fff;
+    color: #000;
+    cursor: auto;
+    font-size: 1em;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 1.444;
+    margin: 0;
+    padding: 0;
+    overflow-wrap: break-word;
+    word-wrap: break-word
+}
+
+body::after {
+    content: 'x-small';
+    display: none
+}
+
+@media (min-width:600px) {
+    body::after {
+        content: 'small'
+    }
+}
+
+@media (min-width:1024px) {
+    body::after {
+        content: 'medium'
+    }
+}
+
+@media (min-width:1440px) {
+    body::after {
+        content: 'large'
+    }
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-size: 18px;
+    font-weight: 300
+}
+
+p {
+    line-height: 1.7;
+    font-size: 16px;
+    letter-spacing: .125rem;
+}
+
+p+p {
+    margin-top: 12px
+}
+
+@media (min-width:1024px) {
+    p+p {
+        margin-top: 16px
+    }
+}
+
+em, i {
+    font-style: italic
+}
+
+b, strong {
+    font-weight: 700
+}
+
+pre {
+    background: #f5f5f5;
+    border-color: #e0e0e0;
+    border-style: solid;
+    border-width: 1px;
+    margin-bottom: 20px;
+    padding: 6px;
+    white-space: pre
+}
+
+pre code {
+    background: 0 0;
+    padding: 0
+}
+
+code {
+    background: #f5f5f5;
+    color: #9e9e9e;
+    font-family: Consolas, Monaco, "Bitstream Vera Sans Mono", "Courier New", Courier, monospace;
+    font-weight: 300;
+    overflow-x: auto;
+    padding: 6px;
+    white-space: pre;
+    word-wrap: normal
+}
+
+dl, ol, ul {
+    list-style-position: outside;
+    margin-bottom: 20px
+}
+
+ol, ul {
+    margin-left: 20px
+}
+
+ol li ol, ol li ul, ul li ol, ul li ul {
+    margin-bottom: 0;
+    margin-left: 20px
+}
+
+html[dir=rtl] ol li ol, html[dir=rtl] ol li ul, html[dir=rtl] ul li ol, html[dir=rtl] ul li ul {
+    margin-left: 0;
+    margin-right: 20px
+}
+
+dl dt {
+    font-weight: 700
+}
+
+dl dd {
+    margin-bottom: 12px
+}
+
+dd, dt, li {
+    line-height: 1.71429;
+    font-size: 14px;
+    letter-spacing: .25px
+}
+
+@media (min-width:600px) {
+    dd, dt, li {
+        line-height: 1.71429;
+        font-size: 14px;
+        letter-spacing: .25px
+    }
+}
+
+@media (min-width:1024px) {
+    dd, dt, li {
+        line-height: 1.625;
+        font-size: 16px;
+        letter-spacing: 0
+    }
+}
+
+img {
+    -ms-interpolation-mode: bicubic;
+    display: inline-block;
+    height: auto;
+    max-width: 100%;
+    vertical-align: middle
+}
+
+blockquote {
+    line-height: 1.33333;
+    color: #202124;
+    font-size: 24px
+}
+
+@media (min-width:1024px) {
+    blockquote {
+        line-height: 1.20833;
+        font-size: 48px
+    }
+}
+
+img {
+    -ms-interpolation-mode: bicubic;
+    display: inline-block;
+    height: auto;
+    max-width: 100%;
+    vertical-align: middle
+}
+
+blockquote, button, dd, div, dl, dt, form, h1, h2, h3, h4, h5, h6, li, ol, p, pre, td, th, ul {
+    font-size: 1rem;
+    font-weight: 400;
+    margin: 0;
+    padding: 0
+}

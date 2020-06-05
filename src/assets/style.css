@@ -1,0 +1,66 @@
+/*********** Module Spacer ***********/
+.module-spacer--extra-extra-small {
+    height: 12px
+}
+.module-spacer--extra-small {
+    height: 12px
+}
+.module-spacer--small {
+    height: 20px
+}
+.module-spacer--medium {
+    height: 32px
+}
+
+/*********** Section ***********/
+.c-section-wrapin {
+    margin: 0 auto;
+    max-width: 575px;
+    position: relative;
+    padding: 0 1rem;
+    text-align: center;
+    width: 100%;
+}
+
+.c-section-container {
+    margin: 0 auto;
+    max-width: 400px;
+    padding: 2rem;
+    height: auto;
+    width: calc(100% - 2rem);
+}
+
+.center {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.u-text-small {
+    font-size: .9rem;
+}
+
+@media screen and (min-width: 576px) {
+    /*********** Module Spacer ***********/
+    .module-spacer--extra-extra-small {
+        height: 16px
+    }
+    .module-spacer--extra-small {
+        height: 20px
+    }
+    .module-spacer--small {
+        height: 32px
+    }
+
+    /*********** Section ***********/
+    .c-section-wrapin {
+        max-width: 1024px;
+    }
+}
+
+@media screen and (min-width:1024px) {
+    /*********** Module Spacer ***********/
+    .module-spacer--medium {
+        height: 48px
+    }
+}
+

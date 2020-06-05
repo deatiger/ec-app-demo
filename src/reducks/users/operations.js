@@ -1,12 +1,12 @@
-import {db, auth, functions, FirebaseTimestamp} from 'src/firebase/index';
+import {db, auth, functions, FirebaseTimestamp} from '../../firebase/index';
 import {
     signOutAction,
-    fetchUserStateAction,
+    signInAction,
     editProfileStateAction,
 } from "./actions";
 import {push, goBack} from 'connected-react-router'
-import {isValidEmailFormat, isValidRequiredInput} from "src/function/common";
-import {hideLoadingAction, showLoadingAction} from "src/reducks/loading/actions";
+import {isValidEmailFormat, isValidRequiredInput} from "../../function/common";
+import {hideLoadingAction, showLoadingAction} from "../loading/actions";
 
 const usersRef = db.collection('users')
 
@@ -39,21 +39,20 @@ export const listenAuthState = () => {
                     }
 
                     // Update logged in user state
-                    dispatch(fetchUserStateAction({
-                        icon_path: data.icon_path,
-                        isLoggedIn: true,
+                    dispatch(signInAction({
+                        isSignedIn: true,
                         uid: user.uid,
                         username: data.username,
                     }))
                 })
             } else {
-                dispatch(push('/login'))
+                dispatch(push('/signin'))
             }
         })
     }
 };
 
-export const registerNewUser = (username, email, password, confirmPassword) => {
+export const signUp = (username, email, password, confirmPassword) => {
     return async (dispatch) => {
         // Validations
         if(!isValidRequiredInput(email, password, confirmPassword)) {
@@ -83,25 +82,25 @@ export const registerNewUser = (username, email, password, confirmPassword) => {
                     const userInitialData = {
                         created_at: timestamp,
                         email: email,
-                        icon_path: "",
-                        username: username,
+                        uid: uid,
                         updated_at: timestamp,
+                        username: username
                     };
 
-                    return usersRef.doc().set(userInitialData).then(async () => {
-                        const sendThankYouMail = functions.httpsCallable('sendThankYouMail');
-                        await sendThankYouMail({
-                            email: email,
-                            userId: user.uid,
-                            username: username,
-                        });
-                        dispatch(push('/thankyou'))
+                    return usersRef.doc(uid).set(userInitialData).then(async () => {
+                        // const sendThankYouMail = functions.httpsCallable('sendThankYouMail');
+                        // await sendThankYouMail({
+                        //     email: email,
+                        //     userId: uid,
+                        //     username: username,
+                        // });
+                        dispatch(push('/'))
                     })
                 } else {
-                    return alert('登録に失敗しました。もう1度お試しください。')
+                    return alert('アカウント登録に失敗しました。もう1度お試しください。')
                 }
             }).catch((error) => {
-                alert('登録に失敗しました。もう1度お試しください。')
+                alert('アカウント登録に失敗しました。もう1度お試しください。')
                 throw new Error(error)
             })
     }
@@ -116,7 +115,7 @@ export const resetPassword = (email) => {
             return auth.sendPasswordResetEmail(email)
                 .then(() => {
                     alert('入力されたアドレス宛にパスワードリセットのメールをお送りしましたのでご確認ください。')
-                    dispatch(push('/login'))
+                    dispatch(push('/signin'))
                 }).catch(() => {
                     alert('登録されていないメールアドレスです。もう一度ご確認ください。')
                 })
@@ -141,7 +140,7 @@ export const saveAddress = (address) => {
 
 export const signIn = (email, password) => {
     return async (dispatch) => {
-        dispatch(showLoadingAction("Login..."));
+        dispatch(showLoadingAction("Sign in..."));
         if (!isValidRequiredInput(email, password)) {
             dispatch(hideLoadingAction());
             alert('メールアドレスかパスワードが未入力です。')
@@ -168,9 +167,8 @@ export const signIn = (email, password) => {
                         throw new Error('ユーザーデータが存在しません');
                     }
 
-                    dispatch(fetchUserStateAction({
-                        icon_path: data.icon_path,
-                        isLoggedIn: true,
+                    dispatch(signInAction({
+                        isSignedIn: true,
                         uid: userId,
                         username: data.username,
                     }))
@@ -186,11 +184,11 @@ export const signIn = (email, password) => {
 
 export const signOut = () => {
     return async (dispatch) => {
-        dispatch(showLoadingAction("Logout..."));
+        dispatch(showLoadingAction("Sign out..."));
         auth.signOut().then(() => {
             dispatch(signOutAction())
             dispatch(hideLoadingAction());
-            dispatch(push('/login'))
+            dispatch(push('/signin'))
         }).catch(() => {
             dispatch(hideLoadingAction());
             throw new Error('ログアウトに失敗しました。')

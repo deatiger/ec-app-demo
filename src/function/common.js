@@ -1,19 +1,16 @@
-import {storage} from "firebase/index";
+import {storage} from "../firebase/index";
 
 /**
  * When user select an image file from his local directory, upload it to Firebase Storage, get download URL,
  * and set the URL to the src property of img tag for displaying the thumbnail.
  * @param {string} id The identifier of input tag for uploading files
  */
-interface HTMLInputEvent extends Event {
-    target: HTMLInputElement & EventTarget;
-}
 
-export const attachFiles = (id: string, type: string) => {
+export const attachFiles = (id, type) => {
     if (type === 'remove') {
         return document.getElementById(id).removeEventListener('change', () => null);
     } else if (type === 'add') {
-        document.getElementById(id).addEventListener("change", (event: HTMLInputEvent)=> {
+        document.getElementById(id).addEventListener("change", (event)=> {
             const file = event.target.files;
             // @ts-ignore
             let blob = new Blob(file, { type: "image/jpeg" });
@@ -25,16 +22,16 @@ export const attachFiles = (id: string, type: string) => {
 
             const uploadRef = storage.ref('images').child(fileName);
             const uploadTask = uploadRef.put(blob);
-            uploadTask.on('state_changed', (snapshot: any) => {
+            uploadTask.on('state_changed', (snapshot) => {
                 // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
                 let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                 console.log('Upload is ' + progress + '% done');
-            }, (error: any) => {
+            }, (error) => {
                 // Handle unsuccessful uploads
                 console.error("Failed to upload file. ERROR: ", error);
             }, () => {
                 // Handle successful uploads on complete
-                uploadTask.snapshot.ref.getDownloadURL().then((downloadURL: string) => {
+                uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
                     console.log('File available at', downloadURL);
                     document.getElementById(`${id}-thumb`).setAttribute('src', downloadURL);
                 });
@@ -50,7 +47,7 @@ export const attachFiles = (id: string, type: string) => {
  * @param {string} text The row text
  * @returns {void | string | never} The formatted text
  */
-export const returnCodeToBr = (text: string) => {
+export const returnCodeToBr = (text) => {
     if (text === "") {
         return text
     } else {
@@ -64,7 +61,7 @@ export const returnCodeToBr = (text: string) => {
  * @param {Date} dt
  * @returns {string} "YYYY-MM-DD"
  */
-export const dateToString = (dt: Date) => {
+export const dateToString = (dt) => {
     return dt.getFullYear() + '-'
         + ('00' + (dt.getMonth()+1)).slice(-2) + '-'
         + ('00' + dt.getDate()).slice(-2)
@@ -76,7 +73,7 @@ export const dateToString = (dt: Date) => {
  * @param {Date} dt
  * @returns {string} "YYYY-MM-DD"
  */
-export const datetimeToString = (dt: Date) => {
+export const datetimeToString = (dt) => {
     return dt.getFullYear() + '-'
         + ('00' + (dt.getMonth()+1)).slice(-2) + '-'
         + ('00' + dt.getDate()).slice(-2) + ' '
@@ -91,7 +88,7 @@ export const datetimeToString = (dt: Date) => {
  * @param email
  * @returns {boolean}
  */
-export const isValidEmailFormat = (email: string) => {
+export const isValidEmailFormat = (email) => {
     const regex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
     return regex.test(email)
 }
@@ -101,7 +98,7 @@ export const isValidEmailFormat = (email: string) => {
  * @param args Required input values
  * @returns {boolean}
  */
-export const isValidRequiredInput = (...args: string[]) => {
+export const isValidRequiredInput = (...args) => {
     let validator = true;
     for (let i=0; i < args.length; i=(i+1)|0) {
         if (args[i] === "") {

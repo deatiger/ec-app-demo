@@ -6,10 +6,10 @@ export const editProfileStateAction = (userProfile) => {
     }
 };
 
-export const FETCH_USER_STATE = "FETCH_USER_STATE";
-export const fetchUserStateAction = (userState) => {
+export const SIGN_IN = "SIGN_IN";
+export const signInAction = (userState) => {
     return {
-        type: "FETCH_USER_STATE",
+        type: "SIGN_IN",
         payload: userState
     }
 };
