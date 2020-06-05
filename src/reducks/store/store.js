@@ -8,8 +8,8 @@ import thunk from 'redux-thunk';
 import {connectRouter, routerMiddleware} from 'connected-react-router'
 
 // Import reducers
-import {LoadingReducer} from 'src/reducks/loading/reducers';
-import {UsersReducer} from 'src/reducks/users/reducers';
+import {LoadingReducer} from '../loading/reducers';
+import {UsersReducer} from '../users/reducers';
 
 // createStoreの再定義 - historyを引数で受け、connected-react-routerの利用を抽象化
 export default function createStore(history) {

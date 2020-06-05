@@ -1,5 +1,5 @@
-import * as Actions from 'src/reducks/loading/actions';
-import {initialState} from 'src/reducks/store/initialState';
+import * as Actions from './actions';
+import {initialState} from '../store/initialState';
 
 export const LoadingReducer = (state = initialState.loading, action)  => {
     switch (action.type) {

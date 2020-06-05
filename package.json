@@ -12,7 +12,9 @@
     "connected-react-router": "^6.8.0",
     "firebase": "^7.14.4",
     "history": "^4.10.1",
+    "html-react-parser": "^0.10.5",
     "react": "^16.13.1",
+    "react-copy-to-clipboard": "^5.0.2",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.0",
     "react-router": "^5.2.0",
@@ -28,8 +30,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy:prod": "REACT_APP_PROJECT_ID=ec-app-12ba0 && npm run build && firebase use ec-app-12ba0 && firebase deploy",
-    "deploy:dev": "REACT_APP_PROJECT_ID=ec-app-dev-12c21 && npm run build && firebase use ec-app-dev-12c21 && firebase deploy"
+    "sass": "node-sass --importer node_modules/node-sass-globbing/index.js -o src/assets/css style.scss",
+    "deploy": "npm run build && firebase use ec-app-12ba0 && firebase deploy"
   },
   "eslintConfig": {
     "extends": "react-app"

@@ -7,7 +7,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ### Configure Firebase Project
 
-Login to your google account  
+SignIn to your google account  
 `fireabase login`  
 
 Init your local environment to connect Firebase project  
