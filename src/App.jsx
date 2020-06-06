@@ -8,14 +8,8 @@ const App = () => {
         <Loading>
             <ScrollToTop />
             <Header />
-            <main>
-
+            <main className="c-main">
                 <Router />
-
-                <section>
-                    <div className="module-spacer--medium" />
-                    <div className="module-spacer--medium" />
-                </section>
             </main>
             <Footer />
         </Loading>
