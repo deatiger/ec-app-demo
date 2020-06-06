@@ -41,6 +41,7 @@ export const listenAuthState = () => {
                     // Update logged in user state
                     dispatch(signInAction({
                         isSignedIn: true,
+                        role: data.role,
                         uid: user.uid,
                         username: data.username,
                     }))
@@ -82,6 +83,7 @@ export const signUp = (username, email, password, confirmPassword) => {
                     const userInitialData = {
                         created_at: timestamp,
                         email: email,
+                        role: "customer",
                         uid: uid,
                         updated_at: timestamp,
                         username: username
@@ -169,6 +171,7 @@ export const signIn = (email, password) => {
 
                     dispatch(signInAction({
                         isSignedIn: true,
+                        role: data.role,
                         uid: userId,
                         username: data.username,
                     }))

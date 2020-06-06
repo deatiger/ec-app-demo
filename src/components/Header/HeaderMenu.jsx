@@ -7,6 +7,7 @@ import {signOut} from "../../reducks/users/operations";
 import {useDispatch, useSelector} from "react-redux";
 import {getUserId} from "../../reducks/users/selectors";
 import {push} from "connected-react-router"
+import {TextInput} from "../UIkit";
 
 const HeaderMenu = () => {
     const dispatch = useDispatch();
@@ -28,6 +29,7 @@ const HeaderMenu = () => {
         handleClose();
     };
 
+
     return (
         <>
             <IconButton
@@ -46,6 +48,7 @@ const HeaderMenu = () => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
+                <MenuItem onClick={() => selectMenu('/product/edit')}>商品の登録</MenuItem>
                 <MenuItem onClick={() => selectMenu('/user/profile/' + userId)}>プロフィール</MenuItem>
                 <MenuItem onClick={() => dispatch(signOut())}>ログアウト</MenuItem>
             </Menu>
