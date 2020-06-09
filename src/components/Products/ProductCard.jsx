@@ -88,16 +88,17 @@ const ProductCard = (props) => {
             <CardMedia
                 className={classes.media}
                 image={images[0].path}
+                onClick={() => dispatch(push('/product/'+props.id))}
                 title=""
             />
             <CardContent className={classes.content}>
-                <div>
-                <Typography className={classes.productName} color="textSecondary" component="p">
-                    {props.productName}
-                </Typography>
-                <Typography className={classes.price} component="p">
-                    ¥{price}
-                </Typography>
+                <div onClick={() => dispatch(push('/product/'+props.id))}>
+                    <Typography className={classes.productName} color="textSecondary" component="p">
+                        {props.productName}
+                    </Typography>
+                    <Typography className={classes.price} component="p">
+                        ¥{price}
+                    </Typography>
                 </div>
                 {isAdministrator && (
                     <>

@@ -10,6 +10,7 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: 8,
         marginRight: 8,
         marginBottom: 16,
+        minWidth: 130,
         width: 'calc(50% - 16px)'
     }
 }))

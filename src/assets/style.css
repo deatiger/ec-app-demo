@@ -97,15 +97,22 @@
     text-decoration: none;
 }
 
+.u-text-left {
+    text-align: left;
+}
+
 .u-text-right {
     text-align: right;
+}
+
+.u-text-center {
+    text-align: center;
 }
 
 .u-text__headline {
     color: #4dd0e1;
     font-size: 1.563rem;
-    margin: 0 auto;
-    text-align: center;
+    margin: 0 auto 1rem auto;
 }
 
 .u-display-none {
