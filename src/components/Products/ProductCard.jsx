@@ -94,7 +94,7 @@ const ProductCard = (props) => {
             <CardContent className={classes.content}>
                 <div onClick={() => dispatch(push('/product/'+props.id))}>
                     <Typography className={classes.productName} color="textSecondary" component="p">
-                        {props.productName}
+                        {props.name}
                     </Typography>
                     <Typography className={classes.price} component="p">
                         ¥{price}

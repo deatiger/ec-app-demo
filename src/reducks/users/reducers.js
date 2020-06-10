@@ -3,6 +3,11 @@ import {initialState} from '../store/initialState';
 
 export const UsersReducer = (state = initialState.users, action)  => {
     switch (action.type) {
+        case Actions.ADD_PRODUCT_TO_CART:
+            return {
+                ...state,
+                cart: [...state.cart ,action.payload]
+            };
         case Actions.EDIT_USER_PROFILE:
             return {
                 ...state,

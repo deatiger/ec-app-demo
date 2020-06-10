@@ -7,7 +7,8 @@ import {signOut} from "../../reducks/users/operations";
 import {useDispatch, useSelector} from "react-redux";
 import {getUserId, getUserRole} from "../../reducks/users/selectors";
 import {push} from "connected-react-router"
-import {TextInput} from "../UIkit";
+import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 
 const HeaderMenu = () => {
     const dispatch = useDispatch();
@@ -31,9 +32,14 @@ const HeaderMenu = () => {
         handleClose();
     };
 
-
     return (
         <>
+            <IconButton>
+                <ShoppingCartIcon />
+            </IconButton>
+            <IconButton>
+                <FavoriteBorderIcon />
+            </IconButton>
             <IconButton
                 aria-label="Menu Items"
                 aria-controls="menu-appbar"
