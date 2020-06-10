@@ -1,3 +1,12 @@
+export const ADD_PRODUCT_TO_CART = "ADD_PRODUCT_TO_CART";
+export const addProductToCartAction = (product) => {
+    return {
+        type: "ADD_PRODUCT_TO_CART",
+        payload: product
+    }
+}
+
+
 export const EDIT_USER_PROFILE = "EDIT_USER_PROFILE";
 export const editProfileStateAction = (userProfile) => {
     return {

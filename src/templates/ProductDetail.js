@@ -1,11 +1,10 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import ImageSwiper from "../components/Products/ImageSwiper";
 import {makeStyles} from "@material-ui/styles";
 import {useDispatch, useSelector} from "react-redux";
-import {db} from "../firebase";
+import {db, FirebaseTimestamp} from "../firebase";
 import {SizeTable} from "../components/Products";
-import {SecondaryButton} from "../components/UIkit";
-import {push} from "connected-react-router";
+import {addProductToCart} from "../reducks/users/operations";
 
 const useStyles = makeStyles((theme) => ({
     sliderBox: {
@@ -47,20 +46,27 @@ const ProductDetail = () => {
 
     const [product, setProduct] = useState(null);
 
-    const productRef = useMemo(() => {
-        const ref = db.collection('products').doc(id)
-
-        ref.get().then(doc => {
+    useEffect(() => {
+        db.collection('products').doc(id).get().then(doc => {
             const data = doc.data()
             setProduct(data)
         })
-
-        return ref
     },[])
 
-    const backToTop = useCallback(() => {
-        dispatch(push('/'))
-    }, [])
+    const addProduct = useCallback((selectedSize) => {
+        const timestamp = FirebaseTimestamp.now()
+        dispatch(addProductToCart({
+            added_at: timestamp,
+            description: product.description,
+            gender: product.gender,
+            id: product.id,
+            images: product.images,
+            name: product.name,
+            price: product.price,
+            quantity: 1,
+            size: selectedSize
+        }))
+    }, [product])
 
     return (
         <section className="c-section-wrapin">
@@ -73,7 +79,7 @@ const ProductDetail = () => {
                         <h2 className="u-text__headline">{product.productName}</h2>
                         <p className={classes.price}>¥{(product.price).toLocaleString()}</p>
                         <div className="module-spacer--small"/>
-                        <SizeTable sizes={product.sizes}/>
+                        <SizeTable addProduct={addProduct} sizes={product.sizes} />
                         <div className="module-spacer--small"/>
                         <p>{product.description}</p>
                     </div>

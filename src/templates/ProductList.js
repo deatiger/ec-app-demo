@@ -21,7 +21,7 @@ const ProductList = () => {
                         return (
                             <ProductCard
                                 id={product.id} images={product.images}
-                                price={product.price} productName={product.productName}
+                                price={product.price} name={product.name}
                             />
                         )
                     })

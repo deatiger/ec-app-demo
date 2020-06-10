@@ -1,5 +1,6 @@
-import {db, auth, functions, FirebaseTimestamp} from '../../firebase/index';
+import {db, auth, FirebaseTimestamp, FirebaseFieldValue} from '../../firebase/index';
 import {
+    addProductToCartAction,
     signOutAction,
     signInAction,
     editProfileStateAction,
@@ -9,6 +10,18 @@ import {isValidEmailFormat, isValidRequiredInput} from "../../function/common";
 import {hideLoadingAction, showLoadingAction} from "../loading/actions";
 
 const usersRef = db.collection('users')
+
+export const addProductToCart = (addedProduct) => {
+    return async (dispatch, getState) => {
+        const uid = getState().users.uid
+        usersRef.doc(uid)
+                .collection('cart').doc(addedProduct.id)
+                .set(addedProduct)
+
+        dispatch(addProductToCartAction(addedProduct))
+        dispatch(push('/cart'))
+    }
+}
 
 export const editUserProfile = (iconPath, introduction, uid, username) => {
     return async (dispatch) => {

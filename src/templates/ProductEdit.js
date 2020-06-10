@@ -18,7 +18,7 @@ const ProductEdit = () => {
         {id: "female", name: "レディース"}
     ]
 
-    const [productName, setProductName] = useState(""),
+    const [name, setName] = useState(""),
           [description, setDescription] = useState(""),
           [images, setImages] = useState([]),
           [category, setCategory] = useState(""),
@@ -27,9 +27,9 @@ const ProductEdit = () => {
           [price, setPrice] = useState(""),
           [sizes, setSizes] = useState([]);
 
-    const inputProductName = useCallback((event) => {
-        setProductName(event.target.value)
-    }, [setProductName])
+    const inputName = useCallback((event) => {
+        setName(event.target.value)
+    }, [setName])
 
     const inputDescription = useCallback((event) => {
         setDescription(event.target.value)
@@ -43,7 +43,7 @@ const ProductEdit = () => {
         if (id !== "") {
             db.collection('products').doc(id).get().then(snapshot => {
                 const product = snapshot.data()
-                setProductName(product.productName)
+                setName(product.name)
                 setDescription(product.description)
                 setImages(product.images)
                 setCategory(product.category)
@@ -71,7 +71,7 @@ const ProductEdit = () => {
                 <ImageArea images={images} setImages={setImages} />
                 <TextInput
                     fullWidth={true} label={"商品名"} multiline={false} required={true}
-                    onChange={inputProductName} rows={1} value={productName} type={"text"}
+                    onChange={inputName} rows={1} value={name} type={"text"}
                 />
                 <TextInput
                     fullWidth={true} label={"商品説明"} multiline={true} required={true}
@@ -93,7 +93,7 @@ const ProductEdit = () => {
                 <div className="center">
                     <PrimaryButton
                         label={"商品情報を保存"}
-                        onClick={() => dispatch(saveProduct(id, productName, description, category, gender, price, sizes, images))}
+                        onClick={() => dispatch(saveProduct(id, name, description, category, gender, price, sizes, images))}
                     />
                 </div>
             </div>
