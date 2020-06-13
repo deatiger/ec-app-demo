@@ -59,7 +59,6 @@ const ProductDetail = () => {
             added_at: timestamp,
             description: product.description,
             gender: product.gender,
-            id: product.id,
             images: product.images,
             name: product.name,
             price: product.price,

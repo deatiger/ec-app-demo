@@ -1,24 +1,23 @@
-import {db, auth, FirebaseTimestamp, FirebaseFieldValue} from '../../firebase/index';
+import {db, auth, FirebaseTimestamp} from '../../firebase/index';
 import {
-    addProductToCartAction,
     signOutAction,
     signInAction,
     editProfileStateAction,
+    fetchProductsInCartAction,
 } from "./actions";
 import {push, goBack} from 'connected-react-router'
 import {isValidEmailFormat, isValidRequiredInput} from "../../function/common";
 import {hideLoadingAction, showLoadingAction} from "../loading/actions";
+import {initProductsAction} from "../products/actions";
 
 const usersRef = db.collection('users')
 
 export const addProductToCart = (addedProduct) => {
     return async (dispatch, getState) => {
         const uid = getState().users.uid
-        usersRef.doc(uid)
-                .collection('cart').doc(addedProduct.id)
-                .set(addedProduct)
-
-        dispatch(addProductToCartAction(addedProduct))
+        const cartRef = usersRef.doc(uid).collection('cart').doc()
+        addedProduct['id'] = cartRef.id
+        await cartRef.set(addedProduct)
         dispatch(push('/cart'))
     }
 }
@@ -40,12 +39,18 @@ export const editUserProfile = (iconPath, introduction, uid, username) => {
     }
 };
 
+export const fetchProductsInCart = (products) => {
+    return async (dispatch) => {
+        dispatch(fetchProductsInCartAction(products))
+    }
+}
+
 
 export const listenAuthState = () => {
     return async (dispatch) => {
         return auth.onAuthStateChanged(user => {
             if (user) {
-                usersRef.doc(user.uid).onSnapshot(snapshot => {
+                usersRef.doc(user.uid).get().then(snapshot => {
                     const data = snapshot.data()
                     if (!data) {
                         throw new Error('ユーザーデータが存在しません。')
@@ -199,12 +204,24 @@ export const signIn = (email, password) => {
 };
 
 export const signOut = () => {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
         dispatch(showLoadingAction("Sign out..."));
+        const uid = getState().users.uid
+
+        // Delete products from the user's cart
+        await usersRef.doc(uid).collection('cart').get()
+            .then(snapshots => {
+                snapshots.forEach(snapshot => {
+                    usersRef.doc(uid).collection('cart').doc(snapshot.id).delete()
+                })
+            });
+
+        // Sign out with Firebase Authentication
         auth.signOut().then(() => {
-            dispatch(signOutAction())
+            dispatch(signOutAction());
+            dispatch(initProductsAction())
             dispatch(hideLoadingAction());
-            dispatch(push('/signin'))
+            dispatch(push('/signin'));
         }).catch(() => {
             dispatch(hideLoadingAction());
             throw new Error('ログアウトに失敗しました。')

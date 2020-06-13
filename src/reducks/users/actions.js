@@ -1,12 +1,3 @@
-export const ADD_PRODUCT_TO_CART = "ADD_PRODUCT_TO_CART";
-export const addProductToCartAction = (product) => {
-    return {
-        type: "ADD_PRODUCT_TO_CART",
-        payload: product
-    }
-}
-
-
 export const EDIT_USER_PROFILE = "EDIT_USER_PROFILE";
 export const editProfileStateAction = (userProfile) => {
     return {
@@ -14,6 +5,14 @@ export const editProfileStateAction = (userProfile) => {
         payload: userProfile
     }
 };
+
+export const FETCH_PRODUCTS_IN_CART = "FETCH_PRODUCTS_IN_CART";
+export const fetchProductsInCartAction = (products) => {
+    return {
+        type: "FETCH_PRODUCTS_IN_CART",
+        payload: products
+    }
+}
 
 export const SIGN_IN = "SIGN_IN";
 export const signInAction = (userState) => {
@@ -23,10 +22,10 @@ export const signInAction = (userState) => {
     }
 };
 
-export const LOG_OUT = "LOG_OUT";
+export const SIGN_OUT = "SIGN_OUT";
 export const signOutAction = () => {
     return {
-        type: "LOG_OUT",
+        type: "SIGN_OUT",
         payload: null
     }
 };
