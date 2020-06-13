@@ -16,12 +16,7 @@ const ImageSwiper = (props) => {
             prevEl: '.swiper-button-prev'
         },
         loop: true,
-        spaceBetween: 30,
-        getSwiper: (swiper) => {
-            swiper.on('slideChange', () => {
-                console.log(`slide changed : ${swiper.activeIndex}`);
-            })
-        }
+        spaceBetween: 30
     })
 
     const images = props.images

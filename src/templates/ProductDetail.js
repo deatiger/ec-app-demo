@@ -62,6 +62,7 @@ const ProductDetail = () => {
             images: product.images,
             name: product.name,
             price: product.price,
+            productId: product.id,
             quantity: 1,
             size: selectedSize
         }))

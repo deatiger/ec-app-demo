@@ -50,11 +50,11 @@ const HeaderMenu = () => {
                             productsInCart.push(product)
                             break;
                         case 'modified':
-                            const index = productsInCart.findIndex(product => product.id === change.doc.id)
+                            const index = productsInCart.findIndex(product => product.cartId === change.doc.id)
                             productsInCart[index] = product;
                             break;
                         case 'removed':
-                            productsInCart = productsInCart.filter(product => product.id !== change.doc.id);
+                            productsInCart = productsInCart.filter(product => product.cartId !== change.doc.id);
                             break;
                         default:
                             break;

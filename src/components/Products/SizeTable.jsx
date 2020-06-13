@@ -30,12 +30,16 @@ const SizeTable = (props) => {
                                 <TableCell component="th" scope="row">{item.size}</TableCell>
                                 <TableCell>残り{item.quantity}点</TableCell>
                                 <TableCell className={classes.iconCell}>
-                                    <IconButton
-                                        className={classes.iconCell}
-                                        onClick={() => props.addProduct(item.size)}
-                                    >
-                                        <ShoppingCartIcon />
-                                    </IconButton>
+                                    {item.quantity > 0 ? (
+                                        <IconButton
+                                            className={classes.iconCell}
+                                            onClick={() => props.addProduct(item.size)}
+                                        >
+                                            <ShoppingCartIcon />
+                                        </IconButton>
+                                    ) : (
+                                        <div>売切</div>
+                                    )}
                                 </TableCell>
                                 <TableCell className={classes.iconCell}>
                                     <IconButton className={classes.iconCell}>
