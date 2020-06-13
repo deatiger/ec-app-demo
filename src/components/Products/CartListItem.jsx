@@ -6,19 +6,13 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import {makeStyles} from "@material-ui/styles";
 import DeleteIcon from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {getUserId} from "../../reducks/users/selectors";
 import {db} from "../../firebase/index"
 
 const useStyles = makeStyles((theme) => ({
-    divider: {
-        margin: '0 auto',
-        maxWidth: 512
-    },
     list: {
-        height: 128,
-        margin: '0 auto',
-        maxWidth: 512
+        height: 128
     },
     image: {
         objectFit: 'cover',
@@ -32,16 +26,16 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const CartListItem = (props) => {
-    const classes = useStyles()
-    const selector = useSelector(state => state)
+    const classes = useStyles();
+    const selector = useSelector(state => state);
 
-    const image = props.product.images[0].path
-    const price = props.product.price.toLocaleString()
+    const image = props.product.images[0].path;
+    const price = props.product.price.toLocaleString();
 
     const removeProductFromCart = (id) => {
-        const uid = getUserId(selector)
+        const uid = getUserId(selector);
         return db.collection('users').doc(uid).collection('cart').doc(id).delete()
-    }
+    };
 
     return (
         <>
@@ -53,11 +47,11 @@ const CartListItem = (props) => {
                     <ListItemText primary={props.product.name} secondary={"サイズ：" + props.product.size} />
                     <ListItemText primary={"¥"+price} />
                 </div>
-                <IconButton onClick={() => removeProductFromCart(props.product.id)} >
+                <IconButton onClick={() => removeProductFromCart(props.product.cartId)} >
                     <DeleteIcon />
                 </IconButton>
             </ListItem>
-            <Divider className={classes.divider} />
+            <Divider />
         </>
     );
 }

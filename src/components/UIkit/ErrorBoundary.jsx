@@ -1,4 +1,4 @@
-import React, {Component, ErrorInfo, ReactElement} from 'react';
+import React, {Component} from 'react';
 import {functions} from "../../firebase/index";
 
 class ErrorBoundary extends Component {

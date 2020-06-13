@@ -60,6 +60,12 @@
     text-align: center;
 }
 
+.p-grid__column {
+    align-items: center;
+    display: flex;
+    flex-flow: column;
+}
+
 .p-grid__row {
     display: flex;
     flex-flow: row wrap;

@@ -2,7 +2,7 @@ import React from 'react';
 import TextField from "@material-ui/core/TextField";
 import {makeStyles} from "@material-ui/styles";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
     full: {
         marginBottom: 16,
     },
@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
         minWidth: 130,
         width: 'calc(50% - 16px)'
     }
-}))
+})
 
 const TextInput = (props) => {
     const classes = useStyles();

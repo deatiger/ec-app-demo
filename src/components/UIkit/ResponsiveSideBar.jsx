@@ -7,11 +7,11 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import MailIcon from '@material-ui/icons/Mail';
-import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
+import {makeStyles, useTheme, createStyles } from '@material-ui/core/styles';
 
 const drawerWidth = 256;
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles((theme) =>
     createStyles({
         root: {
             display: 'flex',
