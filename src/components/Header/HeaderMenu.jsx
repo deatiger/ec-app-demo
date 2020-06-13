@@ -96,6 +96,7 @@ const HeaderMenu = () => {
                 {isAdministrator && (
                     <MenuItem onClick={() => selectMenu('/product/edit')}>商品の登録</MenuItem>
                 )}
+                <MenuItem onClick={() => selectMenu('/order/history')}>注文履歴</MenuItem>
                 <MenuItem onClick={() => selectMenu('/user/profile/' + userId)}>プロフィール</MenuItem>
                 <MenuItem onClick={() => dispatch(signOut())}>ログアウト</MenuItem>
             </Menu>

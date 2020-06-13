@@ -9,6 +9,11 @@ export const UsersReducer = (state = initialState.users, action)  => {
                 icon_path: action.payload.icon_path,
                 username: action.payload.username
             };
+        case Actions.FETCH_ORDERS_HISTORY:
+            return {
+                ...state,
+                orders: [...action.payload]
+            };
         case Actions.FETCH_PRODUCTS_IN_CART:
             return {
                 ...state,

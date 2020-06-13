@@ -61,6 +61,7 @@ export const orderProduct = (productsInCart) => {
                     amount += product.price;
                     products[product.productId] = {
                         id: product.productId,
+                        images: product.images,
                         name: product.name,
                         price: product.price,
                         size: product.size
@@ -74,7 +75,7 @@ export const orderProduct = (productsInCart) => {
         // Create order history data
         const orderRef = userRef.collection('orders').doc()
         const date = timestamp.toDate()
-        const shippingDate = date.setDate(date.getDate() + 3)
+        const shippingDate = FirebaseTimestamp.fromDate(new Date(date.setDate(date.getDate() + 3)))
         const history = {
             amount: amount,
             created_at: timestamp,
