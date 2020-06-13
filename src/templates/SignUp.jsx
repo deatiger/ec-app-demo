@@ -30,7 +30,7 @@ const SignIn = () => {
 
     return (
         <div className="c-section-container">
-            <h2>アカウント登録</h2>
+            <h2 className="u-text-center u-text__headline">アカウント登録</h2>
             <div className="module-spacer--medium" />
             <TextInput
                 fullWidth={true} label={"ユーザー名"} multiline={false} required={true}

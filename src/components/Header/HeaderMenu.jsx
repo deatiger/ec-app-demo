@@ -1,23 +1,27 @@
-import React from 'react';
+import React, {useEffect,  useState} from 'react';
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import {signOut} from "../../reducks/users/operations";
+import {Badge} from "@material-ui/core";
+import {fetchProductsInCart, signOut} from "../../reducks/users/operations";
 import {useDispatch, useSelector} from "react-redux";
-import {getUserId, getUserRole} from "../../reducks/users/selectors";
+import {getProductsInCart, getUserId, getUserRole} from "../../reducks/users/selectors";
 import {push} from "connected-react-router"
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
+import {db} from '../../firebase/index'
 
 const HeaderMenu = () => {
     const dispatch = useDispatch();
     const selector = useSelector((state) => state);
     const userId = getUserId(selector);
     const userRole = getUserRole(selector);
-    const isAdministrator = (userRole === "administrator")
+    let productsInCart = getProductsInCart(selector)
 
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const isAdministrator = (userRole === "administrator");
+
+    const [anchorEl, setAnchorEl] = useState(null);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -32,10 +36,43 @@ const HeaderMenu = () => {
         handleClose();
     };
 
+    // Listen products in user's cart
+    useEffect(() => {
+        const unsubscribe = db.collection('users').doc(userId).collection('cart')
+            .onSnapshot(snapshots => {
+
+                snapshots.docChanges().forEach(change => {
+                    const product = change.doc.data();
+                    const changeType = change.type
+
+                    switch (changeType) {
+                        case 'added':
+                            productsInCart.push(product)
+                            break;
+                        case 'modified':
+                            const index = productsInCart.findIndex(product => product.id === change.doc.id)
+                            productsInCart[index] = product;
+                            break;
+                        case 'removed':
+                            productsInCart = productsInCart.filter(product => product.id !== change.doc.id);
+                            break;
+                        default:
+                            break;
+                    }
+                });
+
+                dispatch(fetchProductsInCart(productsInCart))
+            });
+
+        return () => unsubscribe()
+    },[])
+
     return (
         <>
-            <IconButton>
-                <ShoppingCartIcon />
+            <IconButton onClick={() => dispatch(push('/cart'))}>
+                <Badge badgeContent={productsInCart.length} color="secondary">
+                    <ShoppingCartIcon />
+                </Badge>
             </IconButton>
             <IconButton>
                 <FavoriteBorderIcon />
