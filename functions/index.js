@@ -1,7 +1,12 @@
 const functions = require('firebase-functions');
 const sendgrid = require('@sendgrid/mail');
 
-const SENDGRID_API_KEY = "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";
+/**
+ * Configure environment variable with the following command
+ * firebase functions:config:set sendgrid.key="YOUR_API_KEY"
+ */
+
+const SENDGRID_API_KEY = functions.config().sendgrid.key;
 
 exports.sendThankYouMail = functions.https.onCall(async (data, context)=> {
     const body = `<p>${data.username}様</p>
