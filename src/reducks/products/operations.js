@@ -1,6 +1,7 @@
 import {db, FirebaseTimestamp} from '../../firebase/index';
 import {push} from "connected-react-router";
 import {deleteProductAction, fetchProductsAction} from "./actions"
+import {hideLoadingAction, showLoadingAction} from "../loading/actions";
 
 const productsRef = db.collection('products')
 
@@ -30,6 +31,8 @@ export const fetchProducts = () => {
 
 export const orderProduct = (productsInCart) => {
     return async (dispatch, getState) => {
+        dispatch(showLoadingAction("決済処理中..."))
+
         const uid = getState().users.uid
         const userRef = db.collection('users').doc(uid)
         const timestamp = FirebaseTimestamp.now()
@@ -37,16 +40,15 @@ export const orderProduct = (productsInCart) => {
         let products = {}
 
         for (const product of productsInCart) {
-            await productsRef.doc(product.productId).get()
-                .then(snapshot => {
-                    const batch = db.batch()
+            await db.runTransaction(transaction  => {
+                return transaction.get(productsRef.doc(product.productId)).then(snapshot => {
                     const sizes = snapshot.data().sizes
 
                     // Create a new array of the product sizes
                     const updateSizes = sizes.map(size => {
                         if (size.size === product.size) {
                             if (size.quantity === 0) {
-                                alert('申し訳ございませんが「' + product.name + '」は他の会員が購入したため売り切れました。')
+                                alert('申し訳ございませんが「' + product.name + '」は売り切れたため購入できませんでした。');
                                 return size
                             }
                             return {
@@ -66,16 +68,22 @@ export const orderProduct = (productsInCart) => {
                         price: product.price,
                         size: product.size
                     }
-                    batch.update(productsRef.doc(product.productId), {sizes: updateSizes})
-                    batch.delete(userRef.collection('cart').doc(product.cartId))
-                    batch.commit()
+                    transaction.update(productsRef.doc(product.productId), {sizes: updateSizes})
+                    transaction.delete(userRef.collection('cart').doc(product.cartId))
+                }).catch(error => {
+                    dispatch(hideLoadingAction())
+                    throw new Error("Transaction Failed! ", error)
                 })
+            })
         }
 
         // Create order history data
         const orderRef = userRef.collection('orders').doc()
         const date = timestamp.toDate()
+
+        // Calculate shipping date which is the date after 3 days
         const shippingDate = FirebaseTimestamp.fromDate(new Date(date.setDate(date.getDate() + 3)))
+
         const history = {
             amount: amount,
             created_at: timestamp,
@@ -86,6 +94,7 @@ export const orderProduct = (productsInCart) => {
         }
         await orderRef.set(history)
 
+        dispatch(hideLoadingAction())
         dispatch(push('/order/complete'))
     }
 }
