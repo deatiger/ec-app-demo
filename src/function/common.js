@@ -1,4 +1,5 @@
 import {storage} from "../firebase/index";
+import HTMLReactParser from "html-react-parser";
 
 /**
  * When user select an image file from his local directory, upload it to Firebase Storage, get download URL,
@@ -51,7 +52,7 @@ export const returnCodeToBr = (text) => {
     if (text === "") {
         return text
     } else {
-        return text.replace(/\r?\n/g, '<br/>');
+        return HTMLReactParser(text.replace(/\r?\n/g, '<br/>'))
     }
 };
 

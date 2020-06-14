@@ -111,6 +111,7 @@ export const signUp = (username, email, password, confirmPassword) => {
 
         return auth.createUserWithEmailAndPassword(email, password)
             .then(result => {
+                dispatch(showLoadingAction("Sign up..."))
                 const user = result.user
                 if (user) {
                     const uid = user.uid
@@ -125,7 +126,7 @@ export const signUp = (username, email, password, confirmPassword) => {
                         username: username
                     };
 
-                    return usersRef.doc(uid).set(userInitialData).then(async () => {
+                    usersRef.doc(uid).set(userInitialData).then(async () => {
                         // const sendThankYouMail = functions.httpsCallable('sendThankYouMail');
                         // await sendThankYouMail({
                         //     email: email,
@@ -133,11 +134,11 @@ export const signUp = (username, email, password, confirmPassword) => {
                         //     username: username,
                         // });
                         dispatch(push('/'))
+                        dispatch(hideLoadingAction())
                     })
-                } else {
-                    return alert('アカウント登録に失敗しました。もう1度お試しください。')
                 }
             }).catch((error) => {
+                dispatch(hideLoadingAction())
                 alert('アカウント登録に失敗しました。もう1度お試しください。')
                 throw new Error(error)
             })
