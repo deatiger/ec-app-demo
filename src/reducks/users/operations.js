@@ -28,14 +28,15 @@ export const editUserProfile = (iconPath, introduction, uid, username) => {
             icon_path: iconPath,
             username: username
         };
-        return usersRef.doc(uid).update(updateValue).then(() => {
-            alert('ユーザー情報を更新しました。');
-            dispatch(editProfileStateAction(updateValue));
-            dispatch(goBack())
-        }).catch((error) => {
-            console.error(error)
-            alert('ユーザー情報の更新に失敗しました。')
-        })
+        usersRef.doc(uid).update(updateValue)
+            .then(() => {
+                alert('ユーザー情報を更新しました。');
+                dispatch(editProfileStateAction(updateValue));
+                dispatch(goBack())
+            }).catch((error) => {
+                console.error(error)
+                alert('ユーザー情報の更新に失敗しました。')
+            })
     }
 };
 
@@ -44,7 +45,8 @@ export const fetchOrdersHistory = () => {
         const uid = getState().users.uid;
         const list = []
 
-        usersRef.doc(uid).collection('orders').get()
+        usersRef.doc(uid).collection('orders')
+            .orderBy('updated_at', "desc").get()
             .then(snapshots => {
                 snapshots.forEach(snapshot => {
                     const data = snapshot.data();
@@ -65,20 +67,21 @@ export const listenAuthState = () => {
     return async (dispatch) => {
         return auth.onAuthStateChanged(user => {
             if (user) {
-                usersRef.doc(user.uid).get().then(snapshot => {
-                    const data = snapshot.data()
-                    if (!data) {
-                        throw new Error('ユーザーデータが存在しません。')
-                    }
+                usersRef.doc(user.uid).get()
+                    .then(snapshot => {
+                        const data = snapshot.data()
+                        if (!data) {
+                            throw new Error('ユーザーデータが存在しません。')
+                        }
 
-                    // Update logged in user state
-                    dispatch(signInAction({
-                        isSignedIn: true,
-                        role: data.role,
-                        uid: user.uid,
-                        username: data.username,
-                    }))
-                })
+                        // Update logged in user state
+                        dispatch(signInAction({
+                            isSignedIn: true,
+                            role: data.role,
+                            uid: user.uid,
+                            username: data.username,
+                        }))
+                    })
             } else {
                 dispatch(push('/signin'))
             }
