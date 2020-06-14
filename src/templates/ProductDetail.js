@@ -5,6 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {db, FirebaseTimestamp} from "../firebase";
 import {SizeTable} from "../components/Products";
 import {addProductToCart} from "../reducks/users/operations";
+import {returnCodeToBr} from "../function/common";
 
 const useStyles = makeStyles((theme) => ({
     sliderBox: {
@@ -28,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
         },
         [theme.breakpoints.up('md')]: {
             margin: '0 auto',
-            height: 400,
+            height: 'auto',
             width: 400
         },
     },
@@ -76,12 +77,12 @@ const ProductDetail = () => {
                         <ImageSwiper images={product.images}/>
                     </div>
                     <div className={classes.detail}>
-                        <h2 className="u-text__headline">{product.productName}</h2>
+                        <h2 className="u-text__headline">{product.name}</h2>
                         <p className={classes.price}>¥{(product.price).toLocaleString()}</p>
                         <div className="module-spacer--small"/>
                         <SizeTable addProduct={addProduct} sizes={product.sizes} />
                         <div className="module-spacer--small"/>
-                        <p>{product.description}</p>
+                        <p>{returnCodeToBr(product.description)}</p>
                     </div>
                 </div>
             )}
