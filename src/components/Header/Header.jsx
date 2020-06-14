@@ -57,17 +57,17 @@ const Header = () => {
                     {isSignedIn && (
                         <div className={classes.iconButtons}>
                             <HeaderMenu />
+                            <IconButton
+                                aria-label="Menu Items"
+                                aria-controls="menu-appbar"
+                                aria-haspopup="true"
+                                onClick={(e) => handleDrawerToggle(e)}
+                                color="inherit"
+                            >
+                                <MenuIcon />
+                            </IconButton>
                         </div>
                     )}
-                    <IconButton
-                        aria-label="Menu Items"
-                        aria-controls="menu-appbar"
-                        aria-haspopup="true"
-                        onClick={(e) => handleDrawerToggle(e)}
-                        color="inherit"
-                    >
-                        <MenuIcon />
-                    </IconButton>
                 </Toolbar>
             </AppBar>
             <ClosableDrawer open={sideBarOpen} onClose={handleDrawerToggle} />
