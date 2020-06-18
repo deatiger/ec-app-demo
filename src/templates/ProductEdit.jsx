@@ -6,7 +6,7 @@ import {saveProduct} from "../reducks/products/operations";
 import {ImageArea, SetSizesArea} from "../components/Products";
 
 const ProductEdit = () => {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     let id = window.location.pathname.split('/product/edit')[1];
     if (id !== "") {
         id = id.split('/')[1]
@@ -16,7 +16,7 @@ const ProductEdit = () => {
         {id: "all", name: "すべて"},
         {id: "male", name: "メンズ"},
         {id: "female", name: "レディース"}
-    ]
+    ];
 
     const [name, setName] = useState(""),
           [description, setDescription] = useState(""),

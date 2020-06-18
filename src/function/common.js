@@ -94,6 +94,7 @@ export const isValidEmailFormat = (email) => {
     return regex.test(email)
 }
 
+
 /**
  * Show an alert if required input is blank
  * @param args Required input values
