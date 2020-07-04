@@ -76,6 +76,8 @@ export const listenAuthState = () => {
 
                         // Update logged in user state
                         dispatch(signInAction({
+                            customer_id: (data.customer_id) ? data.customer_id : "",
+                            email: data.email,
                             isSignedIn: true,
                             role: data.role,
                             uid: user.uid,
@@ -93,9 +95,10 @@ export const signUp = (username, email, password, confirmPassword) => {
     return async (dispatch) => {
         // Validations
         if(!isValidRequiredInput(email, password, confirmPassword)) {
-            alert('必須項目が未入力です。')
+            alert('必須項目が未入力です。');
             return false
         }
+
         if(!isValidEmailFormat(email)) {
             alert('メールアドレスの形式が不正です。もう1度お試しください。')
             return false
@@ -112,12 +115,13 @@ export const signUp = (username, email, password, confirmPassword) => {
         return auth.createUserWithEmailAndPassword(email, password)
             .then(result => {
                 dispatch(showLoadingAction("Sign up..."))
-                const user = result.user
+                const user = result.user;
                 if (user) {
-                    const uid = user.uid
+                    const uid = user.uid;
                     const timestamp = FirebaseTimestamp.now();
 
                     const userInitialData = {
+                        customer_id: "",
                         created_at: timestamp,
                         email: email,
                         role: "customer",
@@ -207,11 +211,13 @@ export const signIn = (email, password) => {
                     }
 
                     dispatch(signInAction({
+                        customer_id: (data.customer_id) ? data.customer_id : "",
+                        email: data.email,
                         isSignedIn: true,
                         role: data.role,
                         uid: userId,
                         username: data.username,
-                    }))
+                    }));
 
                     dispatch(hideLoadingAction());
                     dispatch(push('/'))

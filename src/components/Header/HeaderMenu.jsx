@@ -1,8 +1,5 @@
-import React, {useEffect,  useState} from 'react';
+import React, {useEffect} from 'react';
 import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
 import {Badge} from "@material-ui/core";
 import {fetchProductsInCart} from "../../reducks/users/operations";
 import {useDispatch, useSelector} from "react-redux";
@@ -11,8 +8,9 @@ import {push} from "connected-react-router"
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import {db} from '../../firebase/index'
+import MenuIcon from "@material-ui/icons/Menu";
 
-const HeaderMenu = () => {
+const HeaderMenu = (props) => {
     const dispatch = useDispatch();
     const selector = useSelector((state) => state);
     const userId = getUserId(selector);
@@ -47,7 +45,7 @@ const HeaderMenu = () => {
             });
 
         return () => unsubscribe()
-    },[])
+    },[]);
 
     return (
         <>
@@ -58,6 +56,15 @@ const HeaderMenu = () => {
             </IconButton>
             <IconButton>
                 <FavoriteBorderIcon />
+            </IconButton>
+            <IconButton
+                aria-label="Menu Items"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={(e) => props.handleDrawerToggle(e)}
+                color="inherit"
+            >
+                <MenuIcon />
             </IconButton>
         </>
     );

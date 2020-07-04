@@ -12,6 +12,14 @@
     ],
     "rewrites": [
       {
+        "source": "/v1/customer",
+        "function": "stripeCustomer"
+      },
+      {
+        "source": "/v1/cards",
+        "function": "getCards"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }

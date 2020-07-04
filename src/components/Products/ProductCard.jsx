@@ -102,7 +102,7 @@ const ProductCard = (props) => {
                 </div>
                 {isAdministrator && (
                     <>
-                        <IconButton className={classes.icon} onClick={handleClick} color="inherit">
+                        <IconButton className={classes.icon} onClick={handleClick}>
                             <MoreVertIcon />
                         </IconButton>
                         <Menu

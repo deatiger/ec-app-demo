@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
             height: 320,
             width: 320
         },
-        [theme.breakpoints.up('md')]: {
+        [theme.breakpoints.up('sm')]: {
             margin: '0 auto',
             height: 400,
             width: 400
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
             height: 320,
             width: 320
         },
-        [theme.breakpoints.up('md')]: {
+        [theme.breakpoints.up('sm')]: {
             margin: '0 auto',
             height: 'auto',
             width: 400

@@ -44,8 +44,8 @@ const ClosableDrawer = (props) => {
     const { container } = props;
     const classes = useStyles();
     const dispatch = useDispatch();
-    const selector = useSelector(state  => state)
-    const userRole = getUserRole(selector)
+    const selector = useSelector(state  => state);
+    const userRole = getUserRole(selector);
     const isAdministrator = (userRole === "administrator");
 
     const selectMenu = (event, path) => {
@@ -63,7 +63,7 @@ const ClosableDrawer = (props) => {
     const menus = [
         {func: selectMenu, label: "商品登録",    icon: <AddCircleIcon/>, id: "register", value: "/product/edit"},
         {func: selectMenu, label: "注文履歴",    icon: <HistoryIcon/>,   id: "history",  value: "/order/history"},
-        {func: selectMenu, label: "プロフィール", icon: <PersonIcon/>,    id: "profile",  value: "/user/profile"},
+        {func: selectMenu, label: "プロフィール", icon: <PersonIcon/>,    id: "profile",  value: "/user/mypage"},
     ];
 
     useEffect(() => {
