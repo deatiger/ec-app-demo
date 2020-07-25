@@ -20,6 +20,10 @@
         "function": "retrievePaymentMethod"
       },
       {
+        "source": "/v1/updatePaymentMethod",
+        "function": "updatePaymentMethod"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }

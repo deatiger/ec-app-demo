@@ -111,3 +111,29 @@ exports.sendThankYouMail = functions.https.onCall(async (data, context)=> {
     await sendgrid.send(message);
     return null
 });
+
+exports.updatePaymentMethod = functions.https.onRequest((req, res) => {
+    const corsHandler = cors({origin: true});
+
+    corsHandler(req, res, () => {
+        if (req.method !== 'POST') {
+            sendResponse(res, 405, {error: "Invalid Request"})
+        }
+
+        return stripe.paymentMethods.detach(
+            req.body.prevPaymentMethodId
+        ).then((prevPaymentMethod) => {
+            return stripe.paymentMethods.attach(
+                req.body.nextPaymentMethodId,
+                {customer: req.body.customerId,}
+            ).then((nextPaymentMethod) => {
+                sendResponse(res, 200, nextPaymentMethod);
+            })
+
+        }).catch((error) => {
+            console.error(error);
+            sendResponse(res, 500, {error: error})
+        })
+
+    })
+})

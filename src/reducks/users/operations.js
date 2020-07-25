@@ -126,6 +126,7 @@ export const signUp = (username, email, password, confirmPassword) => {
                         created_at: timestamp,
                         email: email,
                         role: "customer",
+                        payment_method_id: "",
                         uid: uid,
                         updated_at: timestamp,
                         username: username
@@ -216,6 +217,7 @@ export const signIn = (email, password) => {
                         email: data.email,
                         isSignedIn: true,
                         role: data.role,
+                        payment_method_id: (data.payment_method_id) ? data.payment_method_id : "",
                         uid: userId,
                         username: data.username,
                     }));
