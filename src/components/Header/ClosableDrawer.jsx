@@ -55,9 +55,9 @@ const ClosableDrawer = (props) => {
 
     const [searchKeyword, setSearchKeyword] = useState(""),
           [filters, setFilters] = useState([
-              {func: selectMenu, label: "すべて",    id: "all",    value: ""              },
-              {func: selectMenu, label: "メンズ",    id: "male",   value: "?gender=male"  },
-              {func: selectMenu, label: "レディース", id: "female", value: "?gender=female"},
+              {func: selectMenu, label: "すべて",    id: "all",    value: "/"              },
+              {func: selectMenu, label: "メンズ",    id: "male",   value: "/?gender=male"  },
+              {func: selectMenu, label: "レディース", id: "female", value: "/?gender=female"},
           ]);
 
     const menus = [
@@ -72,7 +72,7 @@ const ClosableDrawer = (props) => {
                 const list = []
                 snapshots.forEach(snapshot => {
                     const category = snapshot.data()
-                    list.push({func: selectMenu, label: category.name, id: category.id, value: `?category=${category.id}`})
+                    list.push({func: selectMenu, label: category.name, id: category.id, value: `/?category=${category.id}`})
                 })
                 setFilters(prevState => [...prevState, ...list])
             });
@@ -90,7 +90,6 @@ const ClosableDrawer = (props) => {
                 anchor={"right"}
                 open={props.open}
                 onClose={(e) => props.onClose(e)}
-                onKeyDown={(e) => props.onClose(e)}
                 classes={{
                     paper: classes.drawerPaper,
                 }}
@@ -98,7 +97,10 @@ const ClosableDrawer = (props) => {
                     keepMounted: true, // Better open performance on mobile.
                 }}
             >
-                <div>
+                <div
+                    onClose={(e) => props.onClose(e)}
+                    onKeyDown={(e) => props.onClose(e)}
+                >
                     <div className={classes.searchField}>
                         <TextInput
                             fullWidth={false} label={"キーワードを入力"} multiline={false}
@@ -113,13 +115,17 @@ const ClosableDrawer = (props) => {
                         {menus.map(menu => (
                             ((isAdministrator && menu.id === "register") || menu.id !== "register") && (
                                 <ListItem button key={menu.id} onClick={(e) => menu.func(e, menu.value)}>
-                                    <ListItemIcon>{menu.icon}</ListItemIcon>
+                                    <ListItemIcon>
+                                        {menu.icon}
+                                    </ListItemIcon>
                                     <ListItemText primary={menu.label} />
                                 </ListItem>
                             )
                         ))}
                         <ListItem button key="logout" onClick={() => dispatch(signOut())}>
-                            <ListItemIcon><ExitToAppIcon/></ListItemIcon>
+                            <ListItemIcon>
+                                <ExitToAppIcon/>
+                            </ListItemIcon>
                             <ListItemText primary="ログアウト" />
                         </ListItem>
                     </List>

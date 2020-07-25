@@ -6,16 +6,32 @@ import {push} from "connected-react-router";
 // Set Header
 const headers = new Headers();
 headers.set('Content-type', 'application/json');
-const baseUrl = 'https://ec-app-12ba0.web.app';
+const BASE_URL = 'https://ec-app-12ba0.web.app';
 
-export const registerCard = (stripe, elements) => {
+const createCustomer = async (email, paymentMethodId, uid, username) => {
+    const response = await fetch(BASE_URL + '/v1/customer', {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({
+            email: email,
+            paymentMethod: paymentMethodId,
+            userId: uid,
+            username: username
+        })
+    });
+
+    const customerResponse = await response.json();
+    return JSON.parse(customerResponse.body);
+}
+
+export const registerCard = (stripe, elements, customerId) => {
     return async (dispatch, getState) => {
         const user = getState().users;
         const email = user.email;
         const uid = user.uid;
         const username = user.username;
 
-        dispatch(showLoadingAction("決済処理中..."));
+        dispatch(showLoadingAction("登録中..."));
         //*********************** START VALIDATION **************************//
         if (!stripe || !elements) {
             // Stripe.js has not loaded yet. Make sure to disable
@@ -47,45 +63,65 @@ export const registerCard = (stripe, elements) => {
 
         const paymentMethodId = paymentMethod?.id;
 
-        // Create customer on Stripe and register the email.
-        const createCustomer = await fetch(baseUrl + '/v1/customer', {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify({
-                email: email,
-                paymentMethod: paymentMethodId,
-                userId: uid,
-                username: username
-            })
-        });
+        // Create customer on Stripe
+        if (customerId === "") {
+            const customerData = await createCustomer(email, paymentMethodId, uid, username);
 
-        const customerResponse = await createCustomer.json();
-        const customerData = JSON.parse(customerResponse.body);
-        const customerId = customerData.id;
-
-        if (!customerId) {
-            dispatch(hideLoadingAction());
-            alert('カード情報の登録に失敗しました。');
+            if (!customerData.id) {
+                dispatch(hideLoadingAction());
+                alert('お客様情報の登録に失敗しました。');
+            } else {
+                db.collection('users').doc(uid)
+                    .update({
+                        customer_id: customerData.id,
+                        payment_method_id: paymentMethodId
+                    }).then(() => {
+                        dispatch(hideLoadingAction());
+                        alert('お客様情報を登録しました。');
+                        dispatch(push('/user/mypage'))
+                    }).catch(async (error) => {
+                        console.error(error);
+                        // Delete customer data from stripe
+                        const deleteCustomer = await fetch(BASE_URL + '/v1/customer', {
+                            method: 'DELETE',
+                            headers: headers,
+                            body: JSON.stringify({customerId: customerData.id})
+                        });
+                        await deleteCustomer.json();
+                        dispatch(hideLoadingAction());
+                        alert('お客様情報の登録に失敗しました。');
+                    })
+            }
         } else {
-            db.collection('users').doc(uid).update({customer_id: customerId})
-                .then(() => {
-                    dispatch(hideLoadingAction());
-                    alert('カード情報を登録しました。');
-                    dispatch(push('/user/mypage'))
-                }).catch(async (error) => {
-                    console.error(error);
-                    // Delete customer data from stripe
-                    const deleteCustomer = await fetch(baseUrl + '/v1/customer', {
-                        method: 'DELETE',
-                        headers: headers,
-                        body: JSON.stringify({customerId: customerId})
-                    });
-                    await deleteCustomer.json();
-                    dispatch(hideLoadingAction());
-                    alert('カード情報の登録に失敗しました。');
-                })
+            const updatedPaymentMethod = await updatePaymentMethod(customerId, paymentMethodId);
         }
-
-
     }
 };
+
+export const retrievePaymentMethod = async (paymentMethodId) => {
+    const response = await fetch(BASE_URL + '/v1/paymentMethod', {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({
+            paymentMethodId: paymentMethodId
+        })
+    });
+
+    const cardResponse = await response.json();
+    const paymentMethod = JSON.parse(cardResponse.body);
+    return paymentMethod.card
+}
+
+export const updatePaymentMethod = async (paymentMethodId) => {
+    const response = await fetch(BASE_URL + '/v1/updatePaymentMethod', {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({
+            paymentMethodId: paymentMethodId
+        })
+    });
+
+    const paymentMethodResponse = await response.json();
+    const paymentMethod = JSON.parse(paymentMethodResponse.body);
+    return paymentMethod.card
+}

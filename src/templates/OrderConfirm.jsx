@@ -39,12 +39,12 @@ const OrderConfirm = () => {
         return productsInCart.reduce((sum, product) => sum += product.price, 0)
     },[productsInCart])
 
-    const shippingFee = (subtotal >= 10000) ? 0 : 210;
-    const tax = (subtotal + shippingFee) * 0.1;
-    const total = subtotal + shippingFee + tax;
+    const shippingFee = useMemo(() => (subtotal >= 10000) ? 0 : 210,[subtotal])
+    const tax = useMemo(() => (subtotal + shippingFee) * 0.1, [subtotal, shippingFee])
+    const total = useMemo(() => subtotal + shippingFee + tax,[subtotal,shippingFee,tax])
 
     const order = useCallback(() => {
-        dispatch(orderProduct(productsInCart))
+        dispatch(orderProduct(productsInCart, total))
     }, [productsInCart])
 
     return (

@@ -14,10 +14,10 @@ const usersRef = db.collection('users')
 
 export const addProductToCart = (addedProduct) => {
     return async (dispatch, getState) => {
-        const uid = getState().users.uid
-        const cartRef = usersRef.doc(uid).collection('cart').doc()
-        addedProduct['cartId'] = cartRef.id
-        await cartRef.set(addedProduct)
+        const uid = getState().users.uid;
+        const cartRef = usersRef.doc(uid).collection('cart').doc();
+        addedProduct['cartId'] = cartRef.id;
+        await cartRef.set(addedProduct);
         dispatch(push('/cart'))
     }
 }
@@ -79,6 +79,7 @@ export const listenAuthState = () => {
                             customer_id: (data.customer_id) ? data.customer_id : "",
                             email: data.email,
                             isSignedIn: true,
+                            payment_method_id: (data.payment_method_id) ? data.payment_method_id : "",
                             role: data.role,
                             uid: user.uid,
                             username: data.username,

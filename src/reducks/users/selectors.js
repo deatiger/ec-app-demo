@@ -17,6 +17,11 @@ export const getProductsInCart = createSelector(
     state => state.cart
 );
 
+export const getPaymentMethodId = createSelector(
+    [usersSelector],
+    state => state.payment_method_id
+)
+
 export const getSignedIn = createSelector(
     [usersSelector],
     state => state.isSignedIn

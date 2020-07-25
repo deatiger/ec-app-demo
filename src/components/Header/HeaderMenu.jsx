@@ -14,7 +14,7 @@ const HeaderMenu = (props) => {
     const dispatch = useDispatch();
     const selector = useSelector((state) => state);
     const userId = getUserId(selector);
-    let productsInCart = getProductsInCart(selector)
+    let productsInCart = getProductsInCart(selector);
 
     // Listen products in user's cart
     useEffect(() => {
@@ -27,7 +27,7 @@ const HeaderMenu = (props) => {
 
                     switch (changeType) {
                         case 'added':
-                            productsInCart.push(product)
+                            productsInCart.push(product);
                             break;
                         case 'modified':
                             const index = productsInCart.findIndex(product => product.cartId === change.doc.id)

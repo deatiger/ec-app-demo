@@ -18,7 +18,8 @@ const sendResponse = (response, statusCode, body) => {
     });
 };
 
-exports.getCards = functions.https.onRequest((req, res) => {
+
+exports.retrievePaymentMethod = functions.https.onRequest((req, res) => {
     const corsHandler = cors({origin: true});
 
     corsHandler(req, res, () => {
@@ -26,18 +27,17 @@ exports.getCards = functions.https.onRequest((req, res) => {
             sendResponse(res, 405, {error: "Invalid Request"})
         }
 
-        return stripe.customers.listSources(
-            req.body.customerId,
-            {object: 'card', limit: 3}
+        return stripe.paymentMethods.retrieve(
+            req.body.paymentMethodId
         ).then((customer) => {
             sendResponse(res, 200, customer);
         }).catch((error) => {
-            console.log(error);
+            console.error(error);
             sendResponse(res, 500, {error: error})
         })
-    })
 
-});
+    })
+})
 
 /**
  * Create the Stripe Payment Intent when
@@ -52,11 +52,11 @@ exports.stripeCustomer = functions.https.onRequest((req, res) => {
                 description: 'Toraseminar customer',
                 email: req.body.email,
                 metadata: {userId: req.body.userId},
-                payment_method: req.body.paymentMethod
+                payment_method: req.body.paymentMethod,
             }).then((customer) => {
                 sendResponse(res, 200, customer);
             }).catch((error) => {
-                console.log(error);
+                console.error(error);
                 sendResponse(res, 500, {error: error})
             })
         } else if (req.method === 'DELETE') {
@@ -65,7 +65,7 @@ exports.stripeCustomer = functions.https.onRequest((req, res) => {
             ).then((customer) => {
                 sendResponse(res, 200, customer);
             }).catch((error) => {
-                console.log(error);
+                console.error(error);
                 sendResponse(res, 500, {error: error})
             })
         } else {

@@ -1,13 +1,14 @@
-import React, {useEffect, useCallback} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {CardElement, useElements} from "@stripe/react-stripe-js";
 import {makeStyles} from "@material-ui/styles";
 import {theme} from "../../assets/theme";
-import {PrimaryButton} from "../UIkit";
+import {GreyButton, PrimaryButton, TextDetail} from "../UIkit";
 import {useDispatch} from "react-redux";
-import {registerCard} from "../../reducks/payments/operations";
+import {retrievePaymentMethod, registerCard} from "../../reducks/payments/operations";
 import {useStripe} from "@stripe/react-stripe-js";
-import {getCustomerId} from "../../reducks/users/selectors";
+import {getCustomerId, getPaymentMethodId} from "../../reducks/users/selectors";
 import {useSelector} from "react-redux";
+import {push} from "connected-react-router"
 
 const useStyles = makeStyles({
     element: {
@@ -23,20 +24,37 @@ const PaymentEdit = () => {
     const element = useElements();
     const selector = useSelector((state) => state);
     const customerId = getCustomerId(selector);
+    const paymentMethodId = getPaymentMethodId(selector);
+
+    const [card, setCard] = useState({});
 
     const register = useCallback(() => {
-        dispatch(registerCard(stripe, element))
-    }, [stripe, element]);
+        dispatch(registerCard(stripe, element, customerId))
+    }, [stripe, element, customerId]);
+
+    const goBackToMyPage = useCallback(() => {
+        dispatch(push('/user/mypage'))
+    }, [dispatch])
 
     useEffect(() => {
-
-    },[]);
+        (async() => {
+            const paymentMethod = await retrievePaymentMethod(paymentMethodId)
+            if (paymentMethod) {
+                setCard(paymentMethod)
+            }
+        })()
+    },[customerId]);
 
     return (
         <section className="c-section-container">
             <h2 className="u-text__headline u-text-center">クレジットカード情報の登録・編集</h2>
             <div className="module-spacer--medium"/>
-
+            <h3>現在登録されているカード情報</h3>
+            <div className="module-spacer--small" />
+            <TextDetail label={card.brand} value={"**** **** **** " + card.last4} key={card.id}/>
+            <div className="module-spacer--small" />
+            <h3>カード情報の登録・編集</h3>
+            <div className="module-spacer--small" />
             <CardElement
                 className={classes.element}
                 options={{
@@ -55,11 +73,30 @@ const PaymentEdit = () => {
                 }}
             />
             <div className="module-spacer--medium"/>
-
+            <div>
+                <p>
+                    このECアプリではStripeのテスト用カードを使うことができます。<br/>
+                    実際に決済されることはないので安心して使ってください。
+                </p>
+                <p>
+                    CVCコード、郵便番号はどんな数字でもOKです。有効期限は未来の年月ならなんでもOK。<br/>
+                    <br/>
+                    VISA: 4242 4242 4242 4242<br/>
+                    Master Card: 5555 5555 5555 4444<br/>
+                    AMEX: 3782 822463 10005<br/>
+                    Discover: 6011 1111 1111 1117<br/>
+                    Diners Club: 3056 9300 0902 0004
+                </p>
+            </div>
+            <div className="module-spacer--medium"/>
             <div className="center">
                 <PrimaryButton
-                    label={"保存する"}
+                    label={"カード情報を保存する"}
                     onClick={register}
+                />
+                <GreyButton
+                    label={"マイページに戻る"}
+                    onClick={goBackToMyPage}
                 />
             </div>
         </section>

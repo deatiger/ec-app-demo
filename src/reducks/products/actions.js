@@ -21,3 +21,4 @@ export const initProductsAction = () => {
         payload: null
     }
 }
+

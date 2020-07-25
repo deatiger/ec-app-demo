@@ -16,8 +16,8 @@
         "function": "stripeCustomer"
       },
       {
-        "source": "/v1/cards",
-        "function": "getCards"
+        "source": "/v1/paymentMethod",
+        "function": "retrievePaymentMethod"
       },
       {
         "source": "**",

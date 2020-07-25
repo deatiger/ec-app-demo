@@ -1,7 +1,7 @@
 import React from 'react';
 import {Route, Switch} from "react-router";
 import {
-    CartList, CheckoutWrapper, OrderConfirm, OrderComplete, OrderHistory,
+    CartList, CheckoutWrapper, OrderConfirm, OrderComplete, OrderHistory, Menus,
     ProductDetail, ProductEdit, ProductList, Reset, SignIn, SignUp, UserMyPage
 } from "./templates";
 import Auth from "./Auth";

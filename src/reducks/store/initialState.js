@@ -12,6 +12,7 @@ export const initialState = {
         email: "",
         isSignedIn: false,
         orders: [],
+        payment_method_id: "",
         role: "",
         uid: "",
         username: ""
