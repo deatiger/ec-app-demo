@@ -19,7 +19,7 @@ const useStyles = makeStyles({
 })
 
 const TextDetail = (props) => {
-    const classes = useStyles()
+    const classes = useStyles();
 
     return (
         <div className={classes.row}>

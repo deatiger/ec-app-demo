@@ -34,73 +34,88 @@ export const fetchProducts = (gender, category) => {
     }
 }
 
-export const orderProduct = (productsInCart) => {
+export const orderProduct = (productsInCart, price) => {
     return async (dispatch, getState) => {
-        dispatch(showLoadingAction("決済処理中..."))
+        dispatch(showLoadingAction("決済処理中..."));
 
-        const uid = getState().users.uid
-        const userRef = db.collection('users').doc(uid)
-        const timestamp = FirebaseTimestamp.now()
-        let amount = 0;
-        let products = {}
+        const uid = getState().users.uid;
+        const userRef = db.collection('users').doc(uid);
+        const timestamp = FirebaseTimestamp.now();
+        let products = {};
+        let soldOutProducts = [];
+
+        const batch = db.batch();
 
         for (const product of productsInCart) {
-            await db.runTransaction(transaction  => {
-                return transaction.get(productsRef.doc(product.productId)).then(snapshot => {
-                    const sizes = snapshot.data().sizes
+            const snapshot = await productsRef.doc(product.productId).get();
+            const sizes = snapshot.data().sizes;
 
-                    // Create a new array of the product sizes
-                    const updateSizes = sizes.map(size => {
-                        if (size.size === product.size) {
-                            if (size.quantity === 0) {
-                                alert('申し訳ございませんが「' + product.name + '」は売り切れたため購入できませんでした。');
-                                return size
-                            }
-                            return {
-                                size: size.size,
-                                quantity: size.quantity - 1
-                            }
-                        } else {
-                            return size
-                        }
-                    })
-
-                    amount += product.price;
-                    products[product.productId] = {
-                        id: product.productId,
-                        images: product.images,
-                        name: product.name,
-                        price: product.price,
-                        size: product.size
+            // Create a new array of the product sizes
+            const updateSizes = sizes.map(size => {
+                if (size.size === product.size) {
+                    if (size.quantity === 0) {
+                        soldOutProducts.push(product.name);
+                        return size
                     }
-                    transaction.update(productsRef.doc(product.productId), {sizes: updateSizes})
-                    transaction.delete(userRef.collection('cart').doc(product.cartId))
-                }).catch(error => {
-                    dispatch(hideLoadingAction())
-                    throw new Error("Transaction Failed! ", error)
+                    return {
+                        size: size.size,
+                        quantity: size.quantity - 1
+                    }
+                } else {
+                    return size
+                }
+            });
+
+            products[product.productId] = {
+                id: product.productId,
+                images: product.images,
+                name: product.name,
+                price: product.price,
+                size: product.size
+            };
+
+            batch.update(
+                productsRef.doc(product.productId),
+                {sizes: updateSizes}
+            );
+
+            batch.delete(
+                userRef.collection('cart').doc(product.cartId)
+            );
+
+        }
+
+        if (soldOutProducts.length > 0) {
+            const errorMessage = (soldOutProducts.length > 1) ? soldOutProducts.join('と') : soldOutProducts[0];
+            alert('大変申し訳ありません。' + errorMessage + 'が在庫切れとなったため注文処理を中断しました。');
+            return false
+        } else {
+            batch.commit()
+                .then(() => {
+                    // Create order history data
+                    const orderRef = userRef.collection('orders').doc();
+                    const date = timestamp.toDate();
+
+                    // Calculate shipping date which is the date after 3 days
+                    const shippingDate = FirebaseTimestamp.fromDate(new Date(date.setDate(date.getDate() + 3)));
+
+                    const history = {
+                        amount: price,
+                        created_at: timestamp,
+                        id: orderRef.id,
+                        products: products,
+                        shipping_date: shippingDate,
+                        updated_at: timestamp
+                    };
+
+                    orderRef.set(history);
+
+                    dispatch(hideLoadingAction());
+                    dispatch(push('/order/complete'))
+                }).catch(() => {
+                    alert('注文処理に失敗しました。通信環境をご確認のうえ、もう一度お試しください。')
                 })
-            })
         }
-
-        // Create order history data
-        const orderRef = userRef.collection('orders').doc()
-        const date = timestamp.toDate()
-
-        // Calculate shipping date which is the date after 3 days
-        const shippingDate = FirebaseTimestamp.fromDate(new Date(date.setDate(date.getDate() + 3)))
-
-        const history = {
-            amount: amount,
-            created_at: timestamp,
-            id: orderRef.id,
-            products: products,
-            shipping_date: shippingDate,
-            updated_at: timestamp
-        }
-        await orderRef.set(history)
-
-        dispatch(hideLoadingAction())
-        dispatch(push('/order/complete'))
     }
 }
 

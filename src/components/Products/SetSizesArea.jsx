@@ -40,21 +40,22 @@ const SetSizesArea = (props) => {
     }, [setQuantity]);
 
     const addSize = (index, size, quantity) => {
-        if (size === "" && quantity === 0) {
+        if (size === "" || quantity === 0) {
+            // Required input is blank
             return false
         } else {
             if (index === props.sizes.length) {
-                props.setSizes(prevState => [...prevState, {size: size, quantity: quantity}])
-                setIndex(index + 1)
-                setSize("")
+                props.setSizes(prevState => [...prevState, {size: size, quantity: quantity}]);
+                setIndex(index + 1);
+                setSize("");
                 setQuantity(0)
             } else {
                 const newSizes = props.sizes;
                 newSizes[index] = {size: size, quantity: quantity};
                 props.setSizes(newSizes);
                 setIndex(newSizes.length);
-                setSize("")
-                setQuantity(0)
+                setSize("");
+                setQuantity(0);
             }
         }
     }
