@@ -50,7 +50,7 @@ const ClosableDrawer = (props) => {
 
     const selectMenu = (event, path) => {
         dispatch(push(path));
-        props.onClose(event);
+        props.onClose(event, false);
     };
 
     const [searchKeyword, setSearchKeyword] = useState(""),
@@ -89,7 +89,7 @@ const ClosableDrawer = (props) => {
                 variant="temporary"
                 anchor={"right"}
                 open={props.open}
-                onClose={(e) => props.onClose(e)}
+                onClose={(e) => props.onClose(e, false)}
                 classes={{
                     paper: classes.drawerPaper,
                 }}
@@ -98,8 +98,8 @@ const ClosableDrawer = (props) => {
                 }}
             >
                 <div
-                    onClose={(e) => props.onClose(e)}
-                    onKeyDown={(e) => props.onClose(e)}
+                    onClose={(e) => props.onClose(e, false)}
+                    onKeyDown={(e) => props.onClose(e, false)}
                 >
                     <div className={classes.searchField}>
                         <TextInput

@@ -61,7 +61,7 @@ const HeaderMenu = (props) => {
                 aria-label="Menu Items"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
-                onClick={(e) => props.handleDrawerToggle(e)}
+                onClick={(e) => props.handleDrawerToggle(e, true)}
                 color="inherit"
             >
                 <MenuIcon />
