@@ -1,5 +1,8 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+# License
+The source code is licensed MIT. The website content is licensed CC BY 4.0,see LICENSE.
+
 ## 02. Create development environment  
 
 ### Execute CRA(create-react-app)  
