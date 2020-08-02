@@ -36,12 +36,12 @@ const Header = () => {
 
     const [sideBarOpen, setSideBarOpen] = useState(false);
 
-    const handleDrawerToggle = useCallback((event) => {
+    const handleDrawerToggle = useCallback((event, isOpen) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
             return;
         }
-        setSideBarOpen(!sideBarOpen);
-    }, [setSideBarOpen, sideBarOpen]);
+        setSideBarOpen(isOpen)
+    }, [setSideBarOpen]);
 
     return (
         <div className={classes.root}>
