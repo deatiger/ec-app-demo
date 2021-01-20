@@ -24,6 +24,10 @@
         "function": "updatePaymentMethod"
       },
       {
+        "source": "/v1/createPaymentIntent",
+        "function": "createPaymentIntent"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }

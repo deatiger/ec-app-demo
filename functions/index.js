@@ -1,42 +1,76 @@
 const functions = require('firebase-functions');
 const sendgrid = require('@sendgrid/mail');
 const cors = require('cors');
-const stripe = require('stripe')(functions.config().stripe.token);
+// const stripe = require('stripe')(functions.config().stripe.token);
+const stripe = require('stripe')("sk_test_Sgv3OtTX5sedCNcPLRyakvLy00FvHIOgsZ");
 
 /**
  * Configure environment variable with the following command
  * firebase functions:config:set sendgrid.key="YOUR_API_KEY"
  */
-const SENDGRID_API_KEY = functions.config().sendgrid.key;
+// const SENDGRID_API_KEY = functions.config().sendgrid.key;
+const SENDGRID_API_KEY = "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"
 
 // Send response when calling APIs
 const sendResponse = (response, statusCode, body) => {
-    response.send({
-        statusCode,
-        headers: { "Access-Control-Allow-Origin": "*" },
-        body: JSON.stringify(body)
-    });
+  response.send({
+    statusCode,
+    headers: {"Access-Control-Allow-Origin": "*"},
+    body: JSON.stringify(body)
+  });
 };
 
+/**
+ * body: {
+ *   amount: number,
+ *   customerId: string,
+ *   paymentMethodId: string
+ * }
+ */
+
+exports.createPaymentIntent= functions.https.onRequest((req, res) => {
+  const corsHandler = cors({origin: true});
+
+  corsHandler(req, res, () => {
+    if (req.method !== 'POST') {
+      sendResponse(res, 405, {error: "Invalid Request"})
+    }
+
+    return stripe.paymentIntents.create({
+      amount: req.body.amount,
+      confirm: true,
+      currency: 'JPY',
+      customer: req.body.customerId,
+      metadata: {idempotencyKey: req.body.paymentMethodId}, // 冪等性を保つ＝二重決済を防ぐために、この決済でkeyとなる値を渡す
+      payment_method: req.body.paymentMethodId
+    }).then((paymentIntent) => {
+      sendResponse(res, 200, paymentIntent);
+    }).catch((error) => {
+      console.error(error);
+      sendResponse(res, 500, {error: error})
+    })
+
+  })
+})
 
 exports.retrievePaymentMethod = functions.https.onRequest((req, res) => {
-    const corsHandler = cors({origin: true});
+  const corsHandler = cors({origin: true});
 
-    corsHandler(req, res, () => {
-        if (req.method !== 'POST') {
-            sendResponse(res, 405, {error: "Invalid Request"})
-        }
+  corsHandler(req, res, () => {
+    if (req.method !== 'POST') {
+      sendResponse(res, 405, {error: "Invalid Request"})
+    }
 
-        return stripe.paymentMethods.retrieve(
-            req.body.paymentMethodId
-        ).then((customer) => {
-            sendResponse(res, 200, customer);
-        }).catch((error) => {
-            console.error(error);
-            sendResponse(res, 500, {error: error})
-        })
-
+    return stripe.paymentMethods.retrieve(
+      req.body.paymentMethodId
+    ).then((customer) => {
+      sendResponse(res, 200, customer);
+    }).catch((error) => {
+      console.error(error);
+      sendResponse(res, 500, {error: error})
     })
+
+  })
 })
 
 /**
@@ -44,40 +78,40 @@ exports.retrievePaymentMethod = functions.https.onRequest((req, res) => {
  * return {object} paymentIntent The data of payment which has Stripe Payment ID
  */
 exports.stripeCustomer = functions.https.onRequest((req, res) => {
-    const corsHandler = cors({origin: true});
+  const corsHandler = cors({origin: true});
 
-    corsHandler(req, res, () => {
-        if (req.method === 'POST') {
-            return stripe.customers.create({
-                description: 'Toraseminar customer',
-                email: req.body.email,
-                metadata: {userId: req.body.userId},
-                payment_method: req.body.paymentMethod,
-            }).then((customer) => {
-                sendResponse(res, 200, customer);
-            }).catch((error) => {
-                console.error(error);
-                sendResponse(res, 500, {error: error})
-            })
-        } else if (req.method === 'DELETE') {
-            return stripe.customers.del(
-                req.body.customerId
-            ).then((customer) => {
-                sendResponse(res, 200, customer);
-            }).catch((error) => {
-                console.error(error);
-                sendResponse(res, 500, {error: error})
-            })
-        } else {
-            sendResponse(res, 405, {error: "Invalid Request"})
-        }
+  corsHandler(req, res, () => {
+    if (req.method === 'POST') {
+      return stripe.customers.create({
+        description: 'Toraseminar customer',
+        email: req.body.email,
+        metadata: {userId: req.body.userId},
+        payment_method: req.body.paymentMethod,
+      }).then((customer) => {
+        sendResponse(res, 200, customer);
+      }).catch((error) => {
+        console.error(error);
+        sendResponse(res, 500, {error: error})
+      })
+    } else if (req.method === 'DELETE') {
+      return stripe.customers.del(
+        req.body.customerId
+      ).then((customer) => {
+        sendResponse(res, 200, customer);
+      }).catch((error) => {
+        console.error(error);
+        sendResponse(res, 500, {error: error})
+      })
+    } else {
+      sendResponse(res, 405, {error: "Invalid Request"})
+    }
 
 
-    })
+  })
 })
 
-exports.sendThankYouMail = functions.https.onCall(async (data, context)=> {
-    const body = `<p>${data.username}様</p>
+exports.sendThankYouMail = functions.https.onCall(async (data, context) => {
+  const body = `<p>${data.username}様</p>
                   <p>Torashopの会員登録が完了しました。</p>
                   <p>ログインしてコンテンツをお楽しみください。</p>
                   <div>
@@ -101,39 +135,39 @@ exports.sendThankYouMail = functions.https.onCall(async (data, context)=> {
                     HP: https://torahack.web.app
                   </p>`;
 
-    sendgrid.setApiKey(SENDGRID_API_KEY);
-    const message = {
-        to: data.email,
-        from: "torahack1492@gmail.com",
-        subject: "【Torashop】会員登録完了のお知らせ",
-        html: body
-    };
-    await sendgrid.send(message);
-    return null
+  sendgrid.setApiKey(SENDGRID_API_KEY);
+  const message = {
+    to: data.email,
+    from: "torahack1492@gmail.com",
+    subject: "【Torashop】会員登録完了のお知らせ",
+    html: body
+  };
+  await sendgrid.send(message);
+  return null
 });
 
 exports.updatePaymentMethod = functions.https.onRequest((req, res) => {
-    const corsHandler = cors({origin: true});
+  const corsHandler = cors({origin: true});
 
-    corsHandler(req, res, () => {
-        if (req.method !== 'POST') {
-            sendResponse(res, 405, {error: "Invalid Request"})
-        }
+  corsHandler(req, res, () => {
+    if (req.method !== 'POST') {
+      sendResponse(res, 405, {error: "Invalid Request"})
+    }
 
-        return stripe.paymentMethods.detach(
-            req.body.prevPaymentMethodId
-        ).then((prevPaymentMethod) => {
-            return stripe.paymentMethods.attach(
-                req.body.nextPaymentMethodId,
-                {customer: req.body.customerId,}
-            ).then((nextPaymentMethod) => {
-                sendResponse(res, 200, nextPaymentMethod);
-            })
+    return stripe.paymentMethods.detach(
+      req.body.prevPaymentMethodId
+    ).then((prevPaymentMethod) => {
+      return stripe.paymentMethods.attach(
+        req.body.nextPaymentMethodId,
+        {customer: req.body.customerId,}
+      ).then((nextPaymentMethod) => {
+        sendResponse(res, 200, nextPaymentMethod);
+      })
 
-        }).catch((error) => {
-            console.error(error);
-            sendResponse(res, 500, {error: error})
-        })
-
+    }).catch((error) => {
+      console.error(error);
+      sendResponse(res, 500, {error: error})
     })
+
+  })
 })
