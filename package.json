@@ -27,7 +27,7 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
-    "swiper": "^5.4.2"
+    "swiper": "^6.5.1"
   },
   "scripts": {
     "start": "react-scripts start",
